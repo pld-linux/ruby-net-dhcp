@@ -38,11 +38,16 @@ fields defined for the protocol.
 %setup -q -n %{pkgname}-%{version}
 %{__sed} -i -e '1 s,#!.*ruby,#!%{__ruby},' bin/*
 
+%build
+# write .gemspec
+%__gem_helper spec
+
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{ruby_vendorlibdir},%{_bindir}}
+install -d $RPM_BUILD_ROOT{%{ruby_vendorlibdir},%{ruby_specdir},%{_bindir}}
 cp -a lib/* $RPM_BUILD_ROOT%{ruby_vendorlibdir}
 cp -a bin/* $RPM_BUILD_ROOT%{_bindir}
+cp -p %{pkgname}-%{version}.gemspec $RPM_BUILD_ROOT%{ruby_specdir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -60,3 +65,4 @@ rm -rf $RPM_BUILD_ROOT
 %{ruby_vendorlibdir}/net/dhcp/core.rb
 %{ruby_vendorlibdir}/net/dhcp/options.rb
 %{ruby_vendorlibdir}/net/dhcp/oui.txt
+%{ruby_specdir}/%{pkgname}-%{version}.gemspec
